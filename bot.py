@@ -1,7 +1,9 @@
 import discord
 from discord.ext import commands
+import os
 
-TOKEN = "MTQyODAwMjI2OTM5OTQ4MjQ4MA.G05dOo.aDdwR21B4yQrUc37HRHrnut5tbTmgeLedtCylI"
+
+TOKEN = os.getenv("DISCORD_TOKEN")  
 AUDIT_CHANNEL_ID = 1428018103303802970  
 
 intents = discord.Intents.default()
@@ -15,12 +17,13 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
+    print(f"✅ Бот запущен как {bot.user}")
 
 @bot.event
 async def on_audit_log_entry_create(entry: discord.AuditLogEntry):
     channel = bot.get_channel(AUDIT_CHANNEL_ID)
     if not channel:
-        print("⚠️ ID НЕ НАЙДЕН ЕБАНЫЙ РОМАН НАХУЙ")
+        print("⚠️ Канал не найден. Проверь ID.")
         return
 
     embed = discord.Embed(
