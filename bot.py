@@ -1,11 +1,10 @@
 import discord
 from discord.ext import commands
 import os
-import asyncio
 from aiohttp import web
 
 TOKEN = os.getenv("DISCORD_TOKEN")
-AUDIT_CHANNEL_ID = 1428018103303802970
+AUDIT_CHANNEL_ID = 1428018103303802970  # замени на свой канал
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -16,6 +15,9 @@ intents.presences = False
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# -------------------------------
+# Discord-события
+# -------------------------------
 @bot.event
 async def on_ready():
     print(f"✅ Бот запущен как {bot.user}")
@@ -52,19 +54,19 @@ async def start_server():
     app.add_routes([web.get("/", handle)])
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, "0.0.0.0", 10000)  # порт 10000 для Render
+    site = web.TCPSite(runner, "0.0.0.0", 10000)
     await site.start()
     print("🌐 Web server running on port 10000")
 
 # -------------------------------
-# Запуск бота и сервера
+# Используем setup_hook вместо bot.loop.create_task
 # -------------------------------
-async def main():
-    # Запуск HTTP-сервера
+@bot.event
+async def setup_hook():
+    # запускаем сервер параллельно с ботом
     bot.loop.create_task(start_server())
-    # Запуск Discord-бота
-    await bot.start(TOKEN)
 
-if __name__ == "__main__":
-    asyncio.run(main())
-
+# -------------------------------
+# Запуск бота
+# -------------------------------
+bot.run(TOKEN)
