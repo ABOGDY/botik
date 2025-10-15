@@ -5,7 +5,7 @@ import asyncio
 from aiohttp import web
 
 TOKEN = os.getenv("DISCORD_TOKEN")
-AUDIT_CHANNEL_ID = 1428018103303802970  # замени на свой канал
+AUDIT_CHANNEL_ID = 1428018103303802970
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -16,9 +16,6 @@ intents.presences = False
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# -------------------------------
-# Discord-события
-# -------------------------------
 @bot.event
 async def on_ready():
     print(f"✅ Бот запущен как {bot.user}")
@@ -70,3 +67,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
